@@ -7,7 +7,7 @@ use rand::seq::SliceRandom;
 
 fn main() -> io::Result<()> {
     // Get input file path from the user
-    println!("Enter the path to the .seq file you want to shuffle:");
+    println!("Enter the path to the CSV file you want to shuffle:");
     let mut input_path = String::new();
     stdin().read_line(&mut input_path)?;
     let input_path = input_path.trim();
@@ -54,7 +54,6 @@ fn main() -> io::Result<()> {
         lines.insert(i - 2, non_shuffled_lines.remove(0));
     }
 
-
     // Write to the output files (.seq and .csv)
     let seq_output_path = format!("{}.seq", base_output_path);
     let csv_output_path = format!("{}.csv", base_output_path);
@@ -63,21 +62,16 @@ fn main() -> io::Result<()> {
     let mut csv_output_file = File::create(Path::new(&csv_output_path))?;
 
     for header in &headers {
-        writeln!(seq_output_file, "{}", header)?;
-        writeln!(csv_output_file, "{}", header.replace("\t", ","))?;
+        writeln!(seq_output_file, "{}", header.replace(",", "\t"))?;
+        writeln!(csv_output_file, "{}", header)?;
     }
 
     for line in &lines {
-        writeln!(seq_output_file, "{}", line)?;
-        writeln!(csv_output_file, "{}", line.replace("\t", ","))?;
+        writeln!(seq_output_file, "{}", line.replace(",", "\t"))?;
+        writeln!(csv_output_file, "{}", line)?;
     }
-
+    
     println!("File shuffled and saved as {} and {}", seq_output_path, csv_output_path);
 
     Ok(())
 }
-
-
-
-
-
